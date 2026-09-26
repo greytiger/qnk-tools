@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QNK Media Downloader - Tải Video TikTok, YouTube, Facebook Miễn Phí</title>
+  <meta name="description" content="Công cụ tải video trực tuyến miễn phí, hỗ trợ TikTok không logo, Facebook HD, YouTube, Instagram và hơn 20 nền tảng khác. 100% Client-side.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z'/></svg>">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container navbar">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-cloud-arrow-down"></i>
+        </div>
+        <span>QNK Tools</span>
+        <span class="brand-badge">Client v1.0</span>
+      </a>
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="btn-icon" title="Đổi giao diện Sáng/Tối">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button id="settingsBtn" class="btn-icon" title="Cài đặt API">
+          <i class="fa-solid fa-sliders"></i>
+        </button>
+        <a href="https://github.com" target="_blank" rel="noopener" class="btn-icon" title="Xem trên GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="hero-title">
+        Tải Video Đa Nền Tảng <br>
+        <span class="gradient-text">Nhanh Chóng & Miễn Phí</span>
+      </h1>
+      <p class="hero-subtitle">
+        Hỗ trợ TikTok không logo/watermark, Facebook Video HD, YouTube, Instagram và hơn 20 nền tảng khác. Chạy trực tiếp trên trình duyệt 100%.
+      </p>
+
+      <div class="supported-platforms">
+        <span class="platform-pill"><i class="fa-brands fa-tiktok" style="color: #00f2fe;"></i> TikTok (No Watermark)</span>
+        <span class="platform-pill"><i class="fa-brands fa-facebook" style="color: #1877f2;"></i> Facebook HD</span>
+        <span class="platform-pill"><i class="fa-brands fa-youtube" style="color: #ff0000;"></i> YouTube</span>
+        <span class="platform-pill"><i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Instagram</span>
+        <span class="platform-pill"><i class="fa-brands fa-x-twitter"></i> Twitter/X</span>
+      </div>
+    </section>
+
+    <!-- Downloader Box -->
+    <section class="downloader-card">
+      <form id="downloadForm">
+        <div class="input-group-wrapper">
+          <i class="fa-solid fa-link input-icon"></i>
+          <input 
+            type="url" 
+            id="urlInput" 
+            class="url-input" 
+            placeholder="Dán đường dẫn video (TikTok, Facebook, YouTube...)" 
+            autocomplete="off" 
+            required
+          >
+          <div class="input-actions">
+            <button type="button" id="clearBtn" class="btn-clear" title="Xóa đường dẫn" style="display: none;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <button type="button" id="pasteBtn" class="btn-paste" title="Dán từ Clipboard">
+              <i class="fa-regular fa-paste"></i>
+              <span>Dán</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="options-bar">
+          <div id="platformDetectBadge" class="platform-detect-badge">
+            <i class="fa-solid fa-circle-question"></i>
+            <span>Tự nhận diện nền tảng</span>
+          </div>
+
+          <div class="options-controls">
+            <select id="formatSelect" class="select-control" title="Chọn định dạng">
+              <option value="video">Định dạng: Video (MP4)</option>
+              <option value="audio">Định dạng: Âm thanh (MP3)</option>
+            </select>
+
+            <select id="qualitySelect" class="select-control" title="Chọn chất lượng">
+              <option value="1080">Chất lượng: Tối đa (1080p+)</option>
+              <option value="720">Chất lượng: 720p HD</option>
+              <option value="480">Chất lượng: 480p SD</option>
+              <option value="360">Chất lượng: 360p</option>
+            </select>
+
+            <button type="submit" id="submitBtn" class="btn-submit">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Lấy Link Tải</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Loading State -->
+    <div id="loadingBox" class="loading-box">
+      <div class="spinner"></div>
+      <div class="loading-text">Đang phân tích và xử lý video...</div>
+      <div class="loading-subtext">Đang trích xuất luồng tải qua Multi-Engine API</div>
+    </div>
+
+    <!-- Result Card -->
+    <section id="resultCard" class="result-card">
+      <div class="result-header">
+        <div class="result-meta">
+          <h2 id="resultTitle" class="result-title">Tên video mẫu</h2>
+          <div class="result-details">
+            <span id="resultAuthor"><i class="fa-solid fa-user"></i> Tác giả</span>
+            <span id="resultDuration"><i class="fa-regular fa-clock"></i> Thời lượng</span>
+            <span id="resultEngine" class="brand-badge"><i class="fa-solid fa-microchip"></i> Engine</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <!-- Preview Player -->
+        <div class="preview-container">
+          <video id="videoPreview" class="preview-video" controls playsinline style="display: none;"></video>
+          <audio id="audioPreview" class="preview-audio" controls style="display: none;"></audio>
+          <img id="imagePreview" class="preview-thumb" alt="Thumbnail" src="">
+        </div>
+
+        <!-- Download Buttons -->
+        <div id="downloadsList" class="downloads-container">
+          <!-- Dynamic Download items injected by JS -->
+        </div>
+      </div>
+
+      <!-- Fallback Box (Hiện khi API gặp vấn đề giới hạn CORS) -->
+      <div id="fallbackBox" class="fallback-box" style="display: none;">
+        <div class="fallback-title">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Cổng Tải Dự Phòng Nhanh (1-Click Mirrors)</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Nếu liên kết tải trực tiếp gặp hạn chế bảo mật trình duyệt hoặc rate limit, bạn có thể tải ngay qua các cổng dự phòng đã được tối ưu bên dưới:
+        </p>
+        <div id="fallbackLinks" class="fallback-links">
+          <!-- Mirrors injected by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+          <h3 class="feature-title">100% Client-Side</h3>
+          <p class="feature-desc">Mã nguồn chạy trực tiếp trên trình duyệt của bạn, dễ dàng triển khai lên GitHub Pages hoàn toàn miễn phí mà không cần trả tiền thuê server.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-brands fa-tiktok"></i></div>
+          <h3 class="feature-title">TikTok Không Logo (HD)</h3>
+          <p class="feature-desc">Tự động loại bỏ Watermark / Logo ID của TikTok với chất lượng HD sắc nét và trích xuất file âm thanh MP3 gốc.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-network-wired"></i></div>
+          <h3 class="feature-title">Multi-Engine Failover</h3>
+          <p class="feature-desc">Tích hợp nhiều cơ chế API độc lập (TikWM, Cobalt, Invidious) tự động chuyển sang máy chủ dự phòng khi một máy chủ bị quá tải.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- History Section -->
+    <section class="history-section">
+      <div class="section-header">
+        <h3 class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> Lịch Sử Đã Tải Gần Đây</h3>
+        <button id="clearHistoryBtn" class="btn-clear-history">Xóa lịch sử</button>
+      </div>
+      <div id="historyList" class="history-list">
+        <!-- Rendered items or empty state -->
+        <div class="empty-history">Chưa có video nào trong lịch sử tải.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-sliders"></i> Cài Đặt API & Hệ Thống</h3>
+        <button id="closeSettingsBtn" class="btn-icon" title="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settingCobaltInstance">Máy Chủ Cobalt Mặc Định</label>
+        <select id="settingCobaltInstance" class="form-input">
+          <option value="https://api.cobalt.tools">api.cobalt.tools (Chính thức)</option>
+          <option value="https://cobalt-api.kwiatekm.tokyo">cobalt-api.kwiatekm.tokyo</option>
+          <option value="https://co.wuk.sh">co.wuk.sh</option>
+          <option value="https://api.wuk.sh">api.wuk.sh</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settingCustomCobalt">Custom Cobalt Instance (Tùy chọn)</label>
+        <input type="url" id="settingCustomCobalt" class="form-input" placeholder="https://your-cobalt-instance.com">
+        <div class="form-help">Nếu bạn tự host một instance Cobalt riêng, hãy nhập URL vào đây.</div>
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label class="form-label" style="margin-bottom: 0;">Kiểm Tra Trạng Thái & Độ Trễ Máy Chủ</label>
+          <button id="pingTestBtn" class="btn-paste" style="padding: 4px 10px; font-size: 0.78rem;">
+            <i class="fa-solid fa-wifi"></i> Đo Ping
+          </button>
+        </div>
+        <div id="instancePingList" class="instance-ping-list">
+          <!-- Ping items injected by JS -->
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 1.5rem; text-align: right;">
+        <button id="saveSettingsBtn" class="btn-submit" style="padding: 10px 24px;">Lưu Cài Đặt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>QNK Media Tools &copy; 2026. Thiết kế dành cho triển khai GitHub Pages (Client-side).</p>
+      <p style="margin-top: 4px;">Lưu ý: Chỉ sử dụng công cụ để tải các nội dung thuộc quyền sở hữu của bạn hoặc được cho phép chia sẻ công khai.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
