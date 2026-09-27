@@ -147,9 +147,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await window.videoAPI.parseUrl(url, options);
 
       if (result.error) {
-        showToast(result.message || "Không thể phân tích video qua API.", "warning");
-        renderFallbackBox(result.fallbackMirrors);
-        resultCard.style.display = "block";
+        showToast(result.message || "Video có bảo mật WAF, đề xuất dùng cổng dự phòng.", "warning");
+        renderFallbackOnly(result.fallbackMirrors, url);
         return;
       }
 
@@ -165,11 +164,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (err) {
       console.error(err);
-      showToast(err.message || "Đã xảy ra lỗi khi lấy link tải.", "error");
+      showToast("Máy chủ API tạm nghẽn, vui lòng tải qua cổng dự phòng 1-Click!", "warning");
       const platformInfo = window.videoAPI.detectPlatform(url);
       const fallbackMirrors = window.videoAPI.generateFallbackMirrors(url, platformInfo ? platformInfo.id : "general");
-      renderFallbackBox(fallbackMirrors);
-      resultCard.style.display = "block";
+      renderFallbackOnly(fallbackMirrors, url);
     } finally {
       loadingBox.style.display = "none";
       submitBtn.disabled = false;
@@ -255,20 +253,50 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    // Đảm bảo hiển thị đầy đủ thông tin video khi thành công
+    const headerEl = resultCard.querySelector(".result-header");
+    const gridEl = resultCard.querySelector(".result-grid");
+    if (headerEl) headerEl.style.display = "flex";
+    if (gridEl) gridEl.style.display = "grid";
+
     // Cổng dự phòng
     const platformInfo = window.videoAPI.detectPlatform(originalUrl);
     const mirrors = window.videoAPI.generateFallbackMirrors(originalUrl, platformInfo ? platformInfo.id : "general");
-    renderFallbackBox(mirrors);
+    renderFallbackBox(mirrors, originalUrl);
 
     resultCard.style.display = "block";
     resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const renderFallbackBox = (mirrors) => {
+  const renderFallbackOnly = (mirrors, originalUrl) => {
+    // Ẩn khung video xem trước mẫu khi gặp lỗi phân tích API
+    const headerEl = resultCard.querySelector(".result-header");
+    const gridEl = resultCard.querySelector(".result-grid");
+    if (headerEl) headerEl.style.display = "none";
+    if (gridEl) gridEl.style.display = "none";
+
+    renderFallbackBox(mirrors, originalUrl, true);
+    resultCard.style.display = "block";
+    resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const renderFallbackBox = (mirrors, originalUrl, isFallbackOnly = false) => {
     if (!mirrors || mirrors.length === 0) {
       fallbackBox.style.display = "none";
       return;
     }
+    
+    // Cập nhật thông điệp nếu chỉ hiện fallback
+    const titleSpan = fallbackBox.querySelector(".fallback-title span");
+    const descP = fallbackBox.querySelector("p");
+    if (isFallbackOnly) {
+      if (titleSpan) titleSpan.textContent = "Video Được Bảo Vệ Bởi WAF - Hãy Chọn Cổng Tải Dự Phòng";
+      if (descP) descP.textContent = "Hệ thống đã tự động sao chép link video vào bộ nhớ tạm của bạn. Hãy bấm chọn một trong các cổng bên dưới (khuyên dùng SnapTik hoặc SSSTik) rồi nhấn Dán (Ctrl+V) để tải về ngay:";
+    } else {
+      if (titleSpan) titleSpan.textContent = "Cổng Tải Dự Phòng Nhanh (1-Click Mirrors)";
+      if (descP) descP.textContent = "Nếu liên kết tải trực tiếp gặp hạn chế bảo mật trình duyệt hoặc rate limit, bạn có thể tải ngay qua các cổng dự phòng đã được tối ưu bên dưới:";
+    }
+
     fallbackLinks.innerHTML = "";
     mirrors.forEach((m) => {
       const a = document.createElement("a");
@@ -277,6 +305,19 @@ document.addEventListener("DOMContentLoaded", () => {
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       a.innerHTML = `<i class="${m.icon}"></i><span>${m.name}</span>`;
+      
+      // Tự động copy link khi người dùng bấm vào cổng dự phòng
+      a.addEventListener("click", async () => {
+        try {
+          if (originalUrl) {
+            await navigator.clipboard.writeText(originalUrl);
+            showToast(`Đã sao chép link! Hãy dán (Ctrl+V) vào ${m.name}`, "info", 4000);
+          }
+        } catch (e) {
+          // Bỏ qua nếu trình duyệt không hỗ trợ
+        }
+      });
+
       fallbackLinks.appendChild(a);
     });
     fallbackBox.style.display = "block";

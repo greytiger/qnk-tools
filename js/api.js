@@ -284,9 +284,10 @@ class VideoDownloaderAPI {
       );
     } else if (platformId === "tiktok") {
       mirrors.push(
-        { name: "SnapTik", url: `https://snaptik.app/vn?url=${encodedUrl}`, icon: "fa-brands fa-tiktok" },
-        { name: "TikMate", url: `https://tikmate.online/?url=${encodedUrl}`, icon: "fa-solid fa-bolt" },
-        { name: "TikWM Web", url: `https://www.tikwm.com/`, icon: "fa-solid fa-globe" }
+        { name: "SnapTik (Khuyên dùng)", url: "https://snaptik.app/vn", icon: "fa-brands fa-tiktok" },
+        { name: "SSSTik (Tải HD)", url: "https://ssstik.io/vi", icon: "fa-solid fa-download" },
+        { name: "SaveTT", url: "https://savett.cc/en/", icon: "fa-solid fa-bolt" },
+        { name: "TikMate", url: "https://tikmate.online/", icon: "fa-solid fa-cloud-arrow-down" }
       );
     } else {
       mirrors.push(

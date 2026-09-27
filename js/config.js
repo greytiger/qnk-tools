@@ -9,10 +9,11 @@ const APP_CONFIG = {
   
   // Danh sách Cobalt instance công khai để tự động dự phòng (Failover)
   cobaltInstances: [
-    "https://api.cobalt.tools",
-    "https://cobalt-api.kwiatekm.tokyo",
-    "https://co.wuk.sh",
-    "https://api.wuk.sh"
+    "https://cobalt.tools",
+    "https://cobalt.canine.tools",
+    "https://cobalt.clxxped.lol",
+    "https://cobalt.kittycat.boo",
+    "https://cobalt.tame.gg"
   ],
 
   // Endpoint TikWM miễn phí cho TikTok (Hỗ trợ CORS trực tiếp)
