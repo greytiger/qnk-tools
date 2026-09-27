@@ -209,12 +209,19 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="settingCobaltInstance">Máy Chủ Cobalt Mặc Định</label>
+        <label class="form-label" for="settingCustomWorker">Cloudflare Worker Riêng (Cấp 1 - Tự Bóc Tách)</label>
+        <input type="url" id="settingCustomWorker" class="form-input" placeholder="https://my-tiktok-api.your-subdomain.workers.dev">
+        <div class="form-help">Mã nguồn có sẵn trong thư mục <code>cloudflare-worker/</code>. Deploy lên Cloudflare và dán URL vào đây để tự get link không qua trung gian.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settingCobaltInstance">Máy Chủ Cobalt Dự Phòng (Cấp 2)</label>
         <select id="settingCobaltInstance" class="form-input">
-          <option value="https://api.cobalt.tools">api.cobalt.tools (Chính thức)</option>
-          <option value="https://cobalt-api.kwiatekm.tokyo">cobalt-api.kwiatekm.tokyo</option>
-          <option value="https://co.wuk.sh">co.wuk.sh</option>
-          <option value="https://api.wuk.sh">api.wuk.sh</option>
+          <option value="https://cobalt.tools">cobalt.tools (Chính thức)</option>
+          <option value="https://cobalt.canine.tools">cobalt.canine.tools</option>
+          <option value="https://cobalt.clxxped.lol">cobalt.clxxped.lol</option>
+          <option value="https://cobalt.kittycat.boo">cobalt.kittycat.boo</option>
+          <option value="https://cobalt.tame.gg">cobalt.tame.gg</option>
         </select>
       </div>
 

@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveSettingsBtn = document.getElementById("saveSettingsBtn");
   const settingCobaltInstance = document.getElementById("settingCobaltInstance");
   const settingCustomCobalt = document.getElementById("settingCustomCobalt");
+  const settingCustomWorker = document.getElementById("settingCustomWorker");
   const pingTestBtn = document.getElementById("pingTestBtn");
   const instancePingList = document.getElementById("instancePingList");
   const toastContainer = document.getElementById("toastContainer");
@@ -419,8 +420,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================================
   const openSettings = () => {
     const settings = window.videoAPI.getUserSettings();
-    settingCobaltInstance.value = settings.selectedCobaltInstance || "https://api.cobalt.tools";
+    settingCobaltInstance.value = settings.selectedCobaltInstance || "https://cobalt.tools";
     settingCustomCobalt.value = settings.customCobaltInstance || "";
+    settingCustomWorker.value = settings.customWorkerUrl || "";
     settingsModal.style.display = "flex";
   };
 
@@ -438,6 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const curSettings = window.videoAPI.getUserSettings();
     curSettings.selectedCobaltInstance = settingCobaltInstance.value;
     curSettings.customCobaltInstance = settingCustomCobalt.value.trim();
+    curSettings.customWorkerUrl = settingCustomWorker.value.trim();
     window.videoAPI.saveUserSettings(curSettings);
     closeSettings();
     showToast("Đã lưu cấu hình cài đặt!", "success");

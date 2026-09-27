@@ -243,24 +243,51 @@ class VideoDownloaderAPI {
 
     const cleanUrl = url.trim();
     const platform = this.detectPlatform(cleanUrl);
+    const settings = this.getUserSettings();
 
-    // 1. Nếu là TikTok: Ưu tiên TikWM (Cực nhanh, 100% không CORS, có thumbnail & audio)
-    if (platform.id === "tiktok") {
-      return await this.processTikTok(cleanUrl, options);
+    // =========================================================================
+    // CẤP 1: Dùng Cloudflare Worker riêng do bạn tự host (nếu có cấu hình)
+    // =========================================================================
+    if (settings.customWorkerUrl && settings.customWorkerUrl.trim()) {
+      try {
+        const workerEndpoint = `${settings.customWorkerUrl.trim().replace(/\/$/, "")}?url=${encodeURIComponent(cleanUrl)}`;
+        const workerRes = await fetch(workerEndpoint, {
+          method: "GET",
+          headers: { "Accept": "application/json" }
+        });
+        if (workerRes.ok) {
+          const workerData = await workerRes.json();
+          if (workerData && !workerData.error && workerData.downloads && workerData.downloads.length > 0) {
+            return workerData;
+          }
+        }
+      } catch (errWorker) {
+        console.warn("Cấp 1 (Worker riêng) không phản hồi, tự động chuyển sang Cấp 2:", errWorker.message);
+      }
     }
 
-    // 2. Facebook, YouTube, Instagram, Twitter...: Dùng Cobalt Engine (với auto-failover)
+    // =========================================================================
+    // CẤP 2: Dùng API cộng đồng (TikWM cho TikTok, Cobalt cho FB/YouTube)
+    // =========================================================================
     try {
-      return await this.processWithCobalt(cleanUrl, options);
-    } catch (err) {
-      // Nếu Cobalt lỗi, trả về danh sách liên kết dự phòng 1-click
-      return {
-        error: true,
-        message: err.message,
-        platform: platform.id,
-        fallbackMirrors: this.generateFallbackMirrors(cleanUrl, platform.id)
-      };
+      if (platform.id === "tiktok") {
+        return await this.processTikTok(cleanUrl, options);
+      } else {
+        return await this.processWithCobalt(cleanUrl, options);
+      }
+    } catch (errApi) {
+      console.warn("Cấp 2 (API cộng đồng) bị lỗi, kích hoạt Cấp 3 (Cổng dự phòng 1-Click):", errApi.message);
     }
+
+    // =========================================================================
+    // CẤP 3: Cổng dự phòng 1-Click (SnapTik, SSSTik, SaveTT, Y2Mate...)
+    // =========================================================================
+    return {
+      error: true,
+      message: "Video có bảo mật WAF/chống bot. Đã chuẩn bị cổng tải dự phòng 1-Click bên dưới:",
+      platform: platform.id,
+      fallbackMirrors: this.generateFallbackMirrors(cleanUrl, platform.id)
+    };
   }
 
   /**

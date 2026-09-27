@@ -82,8 +82,9 @@ const APP_CONFIG = {
 
   // Cài đặt mặc định của người dùng
   defaultSettings: {
-    selectedCobaltInstance: "https://api.cobalt.tools",
+    selectedCobaltInstance: "https://cobalt.tools",
     customCobaltInstance: "",
+    customWorkerUrl: "", // URL Cloudflare Worker riêng do bạn tự host (Cấp 1)
     defaultQuality: "1080",
     downloadMode: "auto", // 'auto' | 'audio'
     muteAudio: false,

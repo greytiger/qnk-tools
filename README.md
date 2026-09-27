@@ -40,12 +40,15 @@ qnk-tools/
 │   └── style.css               # Phong cách Cyber Glassmorphism, Dark/Light Mode
 ├── js/
 │   ├── config.js               # Cấu hình danh sách API endpoints, regex nền tảng
-│   ├── api.js                  # Bộ xử lý Multi-Engine API và Fallback logic
+│   ├── api.js                  # Bộ xử lý Multi-Engine API và 3-Tier Fallback logic
 │   └── app.js                  # Điều khiển giao diện, clipboard, lịch sử, player
+├── cloudflare-worker/
+│   └── worker.js               # Mã nguồn Cloudflare Worker tự bóc tách 100% không qua trung gian
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml          # Workflow tự động deploy lên GitHub Pages
 ├── .gitignore
+├── .nojekyll
 └── README.md
 ```
 
